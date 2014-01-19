@@ -1,0 +1,17 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: a\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: ilya <drobenyai@tut.by>\n"
+"Language-Team: b\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"X-Poedit-Language: Russian\n"
+
+#: app/views/partials/main.html
+msgid "Splendid!"
+msgstr "Сплендид!"
+

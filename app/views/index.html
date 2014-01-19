@@ -1,0 +1,124 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <base href="/">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(app) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/sass-bootstrap/dist/css/bootstrap.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css({.tmp,app}) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script type="text/javascript">
+      var page_load_start = new Date();
+      var _gaq = _gaq || [];
+      window.onload =  function() {
+        var page_load_end = new Date();
+        var load_time = page_load_end.getTime() - page_load_start.getTime();
+        load_time = parseInt( load_time / 100 )*100;
+        console.log(load_time);
+        // $.get('/api/saveLoadTime?countOfWords=' + <%= countOfWords %> + '&loadTime=' + load_time);
+      };
+    </script>
+  </head>
+  <body ng-app="benchmarkApp">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <!-- <div class="container" ng-view=""></div> -->
+
+    <% for (var i = 0; i < countOfWords; i += 1) { %>
+      <p><a class="btn btn-lg btn-success" ng-href="#">Splendid!<%= i %></a></p>
+    <% } %>
+
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+
+    <!-- build:js(app) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/sass-bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-gettext/dist/angular-gettext.js"></script>
+    <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+        <script src="scripts/app.js"></script>
+        <script>
+          'use strict';
+
+          angular.module('gettext').run(['gettextCatalog', function (gettextCatalog) {
+            document.gettextCatalog = gettextCatalog;
+            gettextCatalog.setStrings('ru', {
+              <% for (var j = 0; j < countOfWords * 100; j += 1) { %>
+              'Splendid!<%=j%>': 'Сплендид!<%=j%>',
+              <% } %>
+            });
+            <% for (var i; i < 10; i += 1) { %>
+            gettextCatalog.setStrings('r<%= i %>', {
+              <% for (var j = 0; j < 10000; j += 1) { %>
+              'Splendid!<%=j%>': 'Сплендид!<%=j%>',
+              <% } %>
+            });
+            <% } %>
+            
+          }]);
+        </script>
+        <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/navbar.js"></script>
+        <!-- endbuild -->
+
+        <script>
+          $(function () {
+            var template = '<p>' + //{{t.getString("Splendid!1")}}
+              <% for (var i = 0; i < countOfWords; i += 1) { %> 
+                ' <a class="btn btn-lg btn-success" ng-href="#"></a>' + 
+              <% } %>
+            '</p>';
+            _.templateSettings = {
+              'interpolate': /{{([\s\S]+?)}}/g
+            };
+            var startDate = new Date();
+            // for (var i = 0; i < 500; i += 1) {
+              _.template(template, {t: document.gettextCatalog});
+            // }
+            var endDate = new Date();
+            var duration1 = (endDate.getTime() - startDate.getTime());
+
+            var template2 = '<p>' + //{{t.getString("Splendid!1")}}
+              <% for (var i = 0; i < countOfWords; i += 1) { %> 
+                ' <a class="btn btn-lg btn-success" ng-href="#">{{t.getString("Splendid!1")}}</a>' + 
+              <% } %>
+            '</p>';
+
+            var startDate2 = new Date();
+            // for (var i = 0; i < 500; i += 1) {
+              _.template(template2, {t: document.gettextCatalog});
+            // }
+            var endDate2 = new Date();
+            var duration2 = (endDate2.getTime() - startDate2.getTime());
+            console.log("template localization: " + (duration2 - duration1));
+            $.get('/api/saveLoadTime?countOfWords=' + <%= countOfWords %> + '&loadTime=' + (duration2 - duration1));
+          });
+        </script>
+</body>
+</html>
